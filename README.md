@@ -1,0 +1,2 @@
+# Arquivos-Amanda
+T-rex
