@@ -8,7 +8,7 @@ var nuvensbarraqueiras, obstaculosirritantes;
 var jogandofeliz = 1;
 var jogandotriste = 0;
 var estado = jogandofeliz;
-
+var pertodeseupai=0;
 function preload(){
     dinognomofoto = loadAnimation("trex1.png", "trex3.png", "trex4.png");
     solopassadofoto = loadImage("ground2.png");
@@ -36,31 +36,45 @@ createCanvas(600,200);
     //console.log(number);
     console.log("Oi"+5);
     nuvensbarraqueiras = new Group();
-    obstaculosirritante = new Group();
+    obstaculosirritantes = new Group();
+    dinognomo.setCollider("circle", 0, 0, 40);
+    //dinognomo.debug = true;
 }
 
 function draw(){
 //console.log(dinognomo.y);
+background("darkseagreen");
+text("Dino perto de seu pai:"+pertodeseupai,450,50);
+console.log("Estado do jogo:", estado);
 if(estado === jogandofeliz){
-    background("darkseagreen");
+    
     solopassado.velocityX=-2;
+    if(solopassado.x<0) {
+        solopassado.x=width/2;
+    }
+    if(keyDown("space")&&dinognomo.y>=150){
+        dinognomo.velocityY = -10;
+    }
+        dinognomo.velocityY = dinognomo.velocityY + 1;
+        createNuvem();
+        createobstaculo();
+        pertodeseupai=pertodeseupai+Math.round(frameCount/60);
+        if(obstaculosirritantes.isTouching(dinognomo)){
+            estado=jogandotriste;
+        }
 } else if(estado === jogandotriste){
-    background("darkgreen");
+   // background("darkgreen");
     solopassado.velocityX=0;
+obstaculosirritantes.setVelocityXEach(0);
+nuvensbarraqueiras.setVelocityXEach(0);
 
 }
 
     
-if(solopassado.x<0) {
-    solopassado.x=width/2;
-}
-if(keyDown("space")&&dinognomo.y>=150){
-    dinognomo.velocityY = -10;
-}
-    dinognomo.velocityY = dinognomo.velocityY + 1;
+
+
     dinognomo.collide(solotrapaceiro);
-createNuvem();
-createobstaculo();
+
 drawSprites();
 }
 
@@ -101,7 +115,7 @@ switch (numerojurassico) {
         break;
 }
 obstaculodoidao.scale=0.5;
-obstaculosirritante.add(obstaculodoidao);
+obstaculosirritantes.add(obstaculodoidao);
 obstaculodoidao.lifetime=300;
     }
 }
