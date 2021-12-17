@@ -1,4 +1,4 @@
-var dinognomo, dinognomofoto;
+var dinognomo, dinognomofoto,dinocommedo;
 var solopassado;
 var solopassadofoto;
 var solotrapaceiro;
@@ -9,6 +9,11 @@ var jogandofeliz = 1;
 var jogandotriste = 0;
 var estado = jogandofeliz;
 var pertodeseupai=0;
+var quedesgosto;
+var desgostoimage;
+var maisumachancefilho;
+var felicidadeimage;
+
 function preload(){
     dinognomofoto = loadAnimation("trex1.png", "trex3.png", "trex4.png");
     solopassadofoto = loadImage("ground2.png");
@@ -19,12 +24,16 @@ function preload(){
     obstaculofour=loadImage("obstacle4.png");
     obstaculofive=loadImage("obstacle5.png");
     obstaculosix=loadImage("obstacle6.png");
+    desgostoimage=loadImage("gameOver.png");
+    felicidadeimage=loadImage("restart.png");
+    dinocommedo=loadAnimation("trex_collided.png");
 }
 
 function setup(){
 createCanvas(600,200);
     dinognomo = createSprite(50,160,20,50);
     dinognomo.addAnimation("correndo", dinognomofoto);
+    dinognomo.addAnimation("fracasso",dinocommedo);
     dinognomo.scale = 0.5;
     borda = createEdgeSprites();
     solopassado = createSprite (200,180,400,20);
@@ -39,6 +48,10 @@ createCanvas(600,200);
     obstaculosirritantes = new Group();
     dinognomo.setCollider("circle", 0, 0, 40);
     //dinognomo.debug = true;
+    quedesgosto=createSprite(300,90);
+    quedesgosto.addImage(desgostoimage);
+    maisumachancefilho= createSprite(300,140);
+    maisumachancefilho.addImage(felicidadeimage);
 }
 
 function draw(){
@@ -53,7 +66,7 @@ if(estado === jogandofeliz){
         solopassado.x=width/2;
     }
     if(keyDown("space")&&dinognomo.y>=150){
-        dinognomo.velocityY = -10;
+        dinognomo.velocityY = -12;
     }
         dinognomo.velocityY = dinognomo.velocityY + 1;
         createNuvem();
@@ -65,9 +78,12 @@ if(estado === jogandofeliz){
 } else if(estado === jogandotriste){
    // background("darkgreen");
     solopassado.velocityX=0;
+    dinognomo.velocityY=0;
+    dinognomo.changeAnimation("fracasso",dinocommedo);
 obstaculosirritantes.setVelocityXEach(0);
 nuvensbarraqueiras.setVelocityXEach(0);
-
+obstaculosirritantes.setLifetimeEach(-1);
+nuvensbarraqueiras.setLifetimeEach(-1);
 }
 
     
