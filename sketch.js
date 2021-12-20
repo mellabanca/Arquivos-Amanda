@@ -13,6 +13,10 @@ var quedesgosto;
 var desgostoimage;
 var maisumachancefilho;
 var felicidadeimage;
+var somsaltitante;
+var somtristonho;
+var somrico;
+var mensagemlouca = "Eu sou uma mensagem louca";
 
 function preload(){
     dinognomofoto = loadAnimation("trex1.png", "trex3.png", "trex4.png");
@@ -27,6 +31,9 @@ function preload(){
     desgostoimage=loadImage("gameOver.png");
     felicidadeimage=loadImage("restart.png");
     dinocommedo=loadAnimation("trex_collided.png");
+    somsaltitante=loadSound ("jump.mp3");
+    somtristonho=loadSound ("die.mp3");
+    somrico=loadSound("checkPoint.mp3");
 }
 
 function setup(){
@@ -43,7 +50,7 @@ createCanvas(600,200);
     solotrapaceiro.visible=false;
     //var number = Math.round(random(1,100));
     //console.log(number);
-    console.log("Oi"+5);
+    //console.log("Oi"+5);
     nuvensbarraqueiras = new Group();
     obstaculosirritantes = new Group();
     dinognomo.setCollider("circle", 0, 0, 40);
@@ -55,25 +62,33 @@ createCanvas(600,200);
 }
 
 function draw(){
+//console.log(mensagemlouca); 
 //console.log(dinognomo.y);
 background("darkseagreen");
 text("Dino perto de seu pai:"+pertodeseupai,450,50);
-console.log("Estado do jogo:", estado);
+//console.log("Estado do jogo:", estado);
 if(estado === jogandofeliz){
     
-    solopassado.velocityX=-2;
+    solopassado.velocityX=-(2+pertodeseupai/100);
     if(solopassado.x<0) {
         solopassado.x=width/2;
     }
     if(keyDown("space")&&dinognomo.y>=150){
         dinognomo.velocityY = -12;
+        somsaltitante.play();
     }
         dinognomo.velocityY = dinognomo.velocityY + 1;
         createNuvem();
         createobstaculo();
         pertodeseupai=pertodeseupai+Math.round(frameCount/60);
+
+        if(pertodeseupai>0 && pertodeseupai%100===0){
+            somrico.play();
+        }
+
         if(obstaculosirritantes.isTouching(dinognomo)){
             estado=jogandotriste;
+            somtristonho.play();
         }
 } else if(estado === jogandotriste){
    // background("darkgreen");
@@ -91,7 +106,15 @@ nuvensbarraqueiras.setLifetimeEach(-1);
 
     dinognomo.collide(solotrapaceiro);
 
+    if(mousePressedOver(maisumachancefilho)){
+        novachance();
+    }
+
 drawSprites();
+}
+
+function novachance(){
+    
 }
 
 function createNuvem(){
@@ -110,7 +133,7 @@ function createNuvem(){
 function createobstaculo(){
     if(frameCount%60===0){
         var obstaculodoidao =createSprite(600,165,10,40);
-obstaculodoidao.velocityX=-6;
+obstaculodoidao.velocityX=-(6+pertodeseupai/100);
 var numerojurassico=Math.round(random(1,6));
 switch (numerojurassico) {
     case 1:obstaculodoidao.addImage(obstaculoone);
